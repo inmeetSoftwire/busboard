@@ -1,22 +1,55 @@
 import fetchArrivals from '../backend/fetchArrivals';
 import { useState } from 'react';
+import type { Arrival } from '../backend/Arrival';
 
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<string>();
+  const [arrivalsData, setArrivalsData] = useState<Arrival[]>();
   const [stopId, setStopId] = useState<string>("");
   return (
-    <>
-        <h1 className="text-3xl font-bold underline text-center text-cyan-600 m-4"
-        >BusBoard</h1>
-        <input value={stopId} onChange={(e) => setStopId(e.target.value)} className="border-2 border-cyan-600 rounded m-4 p-2" placeholder="Enter a stop ID" />
-        <div>{arrivalsData}</div>
-        <div>
-          <button onClick={async () => {
-            const data = await fetchArrivals(stopId);
+  <>
+    <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
+      <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm">
+        BusBoard
+      </h1>
+
+      <div className="flex space-x-2 mb-6">
+        <input
+          value={stopId}
+          onChange={(e) => setStopId(e.target.value)}
+          className="border-2 border-cyan-600 rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          placeholder="Enter a stop ID"
+        />
+        <button
+          onClick={async () => {
+            let data = await fetchArrivals(stopId);
+            data = data?.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
             setArrivalsData(data);
-          }}>Click me!</button>
-        </div>
-      </>
+          }}
+          className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
+        >
+          Search
+        </button>
+      </div>
+
+      <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
+        {arrivalsData ? (
+          <div className="whitespace-pre-wrap text-gray-700 text-sm">
+            {arrivalsData.map((arrival, index) => (
+              <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
+                <div className="text-lg"><strong>{arrival.lineName}</strong> to {arrival.destinationName}</div> <br></br>
+                <strong className='text-md'>{Math.round(arrival.timeToStation / 60)} mins </strong>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center">
+            Enter a stop ID and click Search to see arrivals
+          </p>
+        )}
+      </div>
+    </div>
+  </>
+
   )
 }
 
