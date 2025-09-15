@@ -2,22 +2,20 @@ import fetchArrivals from '../backend/fetchArrivals';
 import { getStopPointsFromPostcode } from '../backend/postcodeService';
 import { useState } from 'react';
 import type { Arrival } from '../backend/Arrival';
+import type { StopPoint } from '../backend/StopPoint';
 
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<Arrival[][]>([]);
+  const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>();
   const [postcode, setPostcode] = useState<string>("");
   const [stopIds, setStopIds] = useState<string[]>([]);
+  const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
 
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-
-  function formatArrivalTime(seconds: number) {
-    const minutes = Math.round(seconds / 60);
-    if (minutes === 0) {
-      return "Due";
-    }
-    return `${minutes} min${minutes !== 1 ? 's' : ''}`;
+  function updateArrivalsRecord(stopId: string, arrivals: Arrival[]) {
+    const newRecord = { ...arrivalsByStopId };
+    newRecord[stopId] = arrivals;
+    setArrivalsByStopId(newRecord);
   }
-  
   return (
     <>
       <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
@@ -35,16 +33,15 @@ function App() {
           <button
             onClick={async () => {
               setHasSearched(true);
-              const stopPoints = await getStopPointsFromPostcode(postcode);
-              setStopIds(stopPoints?.map((s) => s.id) ?? []);
-              if (stopIds.length > 0) {
-                let arrivals: Arrival[][] = [];
-                for (const id of stopIds) {
-                  const stopArrivals = await fetchArrivals(id);
-                  arrivals.push(stopArrivals ?? []);
-                }
-                setArrivalsData(arrivals);
-              }
+              const stopPointsFromPostcode = await getStopPointsFromPostcode(postcode);
+              const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
+              setStopPoints(nearestTwoStopPoints);
+              const ids = nearestTwoStopPoints.map(sp => sp.id);
+              setStopIds(ids);
+              
+              const pairs = await Promise.all(ids.map(async id => [id, (await fetchArrivals(id)) ?? []] as const));
+              for (const [id, arrivals] of pairs) 
+                updateArrivalsRecord(id, arrivals);
             }}
             className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
           >
@@ -53,14 +50,14 @@ function App() {
         </div>
 
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          {arrivalsData.length > 0 ? (
+          {arrivalsByStopId ? (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
-              {arrivalsData.map((arrivalsForStop, stopIndex) => (
+              {stopPoints.map((sp, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
                   <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
-                    Stop {stopIndex + 1}
+                    {sp.commonName} ({sp.indicator})
                   </h3>
-                  {arrivalsForStop.map((arrival, index) => (
+                  {(arrivalsByStopId[sp.id] || []).map((arrival, index) => (
                     <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
                       <div className="text-lg">
                         <strong>{arrival.lineName}</strong> to{" "}

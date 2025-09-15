@@ -14,5 +14,12 @@ async function fetchArrivals(stopId: string) {
     }
 }
 
+async function fetchArrivalsForStops(stopIds: string[]) : Promise<Record<string, Arrival[]>> {
+    const arrivalsByStopId: Record<string, Arrival[]> = {};
+    for (const id of stopIds) {
+        arrivalsByStopId[id] = await fetchArrivals(id) ?? [];
+    }
+    return arrivalsByStopId;
+}
 
 export default fetchArrivals;
