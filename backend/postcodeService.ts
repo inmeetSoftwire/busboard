@@ -6,7 +6,6 @@ async function getLatLongFromPostcode(postcode: string) {
     const API_URL = `https://api.postcodes.io/postcodes/${postcode}`;
     try {
         const response = await axios.get(API_URL);
-        console.log(JSON.stringify(response.data));
         return response.data.result as Coordinate;
     } catch (error) {
         console.error('Error fetching arrivals:', error);

@@ -17,7 +17,7 @@ function App() {
 
   function formatArrivalTime(seconds: number) {
     const minutes = Math.round(seconds / 60);
-    if (minutes == 0) {
+    if (minutes === 0) {
       return "Due";
     }
     return `${minutes} min${minutes !== 1 ? 's' : ''}`;
@@ -55,7 +55,7 @@ function App() {
         </div>
 
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          {arrivalsByStopId ? (
+          {arrivalsByStopId.keys.length > 0 ? (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
               {stopPoints.map((sp, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
