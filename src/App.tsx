@@ -6,6 +6,15 @@ function App() {
   const [arrivalsData, setArrivalsData] = useState<Arrival[]>([]);
   const [stopId, setStopId] = useState<string>("");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+
+  function formatArrivalTime(seconds: number) {
+    const minutes = Math.round(seconds / 60);
+    if (minutes == 0) {
+      return "Due";
+    }
+    return `${minutes} min${minutes !== 1 ? 's' : ''}`;
+  }
+  
   return (
   <>
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
@@ -38,7 +47,7 @@ function App() {
             {arrivalsData.map((arrival, index) => (
               <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
                 <div className="text-lg"><strong>{arrival.lineName}</strong> to {arrival.destinationName}</div> <br></br>
-                <strong className='text-md'>{Math.round(arrival.timeToStation / 60)} mins </strong>
+                <strong className='text-md'>{formatArrivalTime(arrival.timeToStation)}</strong>
               </div>
             ))}
           </div>
