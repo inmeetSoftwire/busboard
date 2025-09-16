@@ -1,12 +1,31 @@
 import { getNearestStopPointsFromPostcode, getStopArrivalsFromStopPoints, sortAndSliceArrivals } from '../backend/backendService';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { StopPoint } from '../backend/types/StopPoint';
 import type { StopArrivals } from '../backend/types/StopArrivals';
 import StopArrivalsContainer from './components/StopArrivalsContainer';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 
+function App() {
+  return (
+    <BrowserRouter>
+      <nav>
+        <Link to="/history">History</Link> |{" "}
+        <Link to="/arrivals">Arrivals</Link>
+      </nav>
 
+      {/* Routes */}
+      <Routes>
+        <Route path="/history" element={<History/>} />
+        <Route path="/arrivals" element={<Arrivals/>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-function App() : React.JSX.Element {
+function History() {
+  return <div>History Page</div>;
+}
+function Arrivals() {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[] | null>(null);
@@ -35,7 +54,6 @@ function App() : React.JSX.Element {
   }
 
   return (
-    <>
       <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
         <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm">
           BusBoard
@@ -79,7 +97,6 @@ function App() : React.JSX.Element {
           )}
         </div>
       </div>
-    </>
   );
 }
 
