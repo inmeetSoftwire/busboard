@@ -5,6 +5,7 @@ import type { Arrival } from '../backend/Arrival';
 function App() {
   const [arrivalsData, setArrivalsData] = useState<Arrival[]>([]);
   const [stopId, setStopId] = useState<string>("");
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
   return (
   <>
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
@@ -21,6 +22,7 @@ function App() {
         />
         <button
           onClick={async () => {
+            setHasSearched(true);
             let data = await fetchArrivals(stopId);
             data = data?.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
             if (data) setArrivalsData(data);
@@ -41,11 +43,13 @@ function App() {
               </div>
             ))}
           </div>
-        ) : (
+        ) : (( hasSearched ) ?
+          <p className="text-gray-500 text-center">No arrivals found for this stop ID.</p>
+         : (
           <p className="text-gray-500 text-center">
             Enter a stop ID and click Search to see arrivals
           </p>
-        )}
+        ))}
       </div>
     </div>
   </>
