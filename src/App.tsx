@@ -23,8 +23,7 @@ function App() {
         <button
           onClick={async () => {
             setHasSearched(true);
-            let data = await fetchArrivals(stopId);
-            data = data?.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
+            const data = await fetchArrivals(stopId);
             if (data) setArrivalsData(data);
           }}
           className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
