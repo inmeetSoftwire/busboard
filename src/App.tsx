@@ -77,7 +77,7 @@ function App() {
               ))}
             </div>
           ) : (( hasSearched ) ?
-          <p className="text-gray-500 text-center">No arrivals found for this stop ID.</p>
+          <p className="text-gray-500 text-center">No arrivals found for this postcode.</p>
          : (
             <p className="text-gray-500 text-center">
               Enter a postcode and click Search to see arrivals
