@@ -6,8 +6,8 @@ async function fetchArrivals(stopId: string) {
     console.log(TFL_API_KEY)
     const API_URL = `https://api.tfl.gov.uk/StopPoint/${stopId}/Arrivals?api_key=${TFL_API_KEY}`;
     try {
-        const response = await axios.get(API_URL);
-        return response.data as Arrival[];
+        const response = await axios.get<Arrival[]>(API_URL);
+        return response.data;
     } catch (error) {
         console.error('Error fetching arrivals:', error);
     }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { Arrival } from '../backend/Arrival';
 
 function App() {
-  const [arrivalsData, setArrivalsData] = useState<Arrival[]>();
+  const [arrivalsData, setArrivalsData] = useState<Arrival[]>([]);
   const [stopId, setStopId] = useState<string>("");
   return (
   <>
@@ -23,7 +23,7 @@ function App() {
           onClick={async () => {
             let data = await fetchArrivals(stopId);
             data = data?.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
-            setArrivalsData(data);
+            if (data) setArrivalsData(data);
           }}
           className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
         >
@@ -32,7 +32,7 @@ function App() {
       </div>
 
       <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-        {arrivalsData ? (
+        {arrivalsData.length > 0 ? (
           <div className="whitespace-pre-wrap text-gray-700 text-sm">
             {arrivalsData.map((arrival, index) => (
               <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
