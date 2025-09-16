@@ -5,16 +5,22 @@ import type { Arrival } from '../backend/Arrival';
 import type { StopPoint } from '../backend/StopPoint';
 
 function App() {
-  const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>();
+  const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>({});
   const [postcode, setPostcode] = useState<string>("");
-  const [stopIds, setStopIds] = useState<string[]>([]);
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
 
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-  function updateArrivalsRecord(stopId: string, arrivals: Arrival[]) {
-    const newRecord = { ...arrivalsByStopId };
-    newRecord[stopId] = arrivals;
-    setArrivalsByStopId(newRecord);
+  function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) {
+    const sorted = arrivals.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
+    setArrivalsByStopId(prev => ({ ...(prev ?? {}), [stopId]: sorted }));
+}
+
+  function formatArrivalTime(seconds: number) {
+    const minutes = Math.round(seconds / 60);
+    if (minutes == 0) {
+      return "Due";
+    }
+    return `${minutes} min${minutes !== 1 ? 's' : ''}`;
   }
   return (
     <>
@@ -37,11 +43,10 @@ function App() {
               const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
               setStopPoints(nearestTwoStopPoints);
               const ids = nearestTwoStopPoints.map(sp => sp.id);
-              setStopIds(ids);
               
               const pairs = await Promise.all(ids.map(async id => [id, (await fetchArrivals(id)) ?? []] as const));
-              for (const [id, arrivals] of pairs) 
-                updateArrivalsRecord(id, arrivals);
+              
+              for (const [id, arrivals] of pairs) sortArrivalsAndUpdateRecord(id, arrivals);
             }}
             className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
           >
@@ -64,7 +69,7 @@ function App() {
                         {arrival.destinationName}
                       </div>
                       <div className="text-md font-semibold">
-                        {Math.round(arrival.timeToStation / 60)} mins
+                        {formatArrivalTime(arrival.timeToStation)}
                       </div>
                     </div>
                   ))}
@@ -75,7 +80,7 @@ function App() {
           <p className="text-gray-500 text-center">No arrivals found for this stop ID.</p>
          : (
             <p className="text-gray-500 text-center">
-              Enter a stop ID and click Search to see arrivals
+              Enter a postcode and click Search to see arrivals
             </p>
           ))}
         </div>
