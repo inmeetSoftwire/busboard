@@ -8,8 +8,8 @@ function App() {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>({});
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
-
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+
   function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) {
     const sorted = arrivals.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
     setArrivalsByStopId(prev => ({ ...(prev ?? {}), [stopId]: sorted }));
