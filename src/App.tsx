@@ -12,11 +12,9 @@ function App() : React.JSX.Element {
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) : void {
-    const sorted = arrivals.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
-    setArrivalsByStopId(prev => {
-      const without = prev.filter(entry => entry.stopId !== stopId);
-      return [...without, { stopId, arrivals: sorted }];
-    })
+    // Assumes that the given stopId is not already in arrivalsByStopId
+    const sorted = arrivals.slice().sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
+    setArrivalsByStopId(prev => [...prev, { stopId, arrivals: sorted }]);
   }
 
   function formatArrivalTime(seconds: number) : string {
@@ -26,6 +24,20 @@ function App() : React.JSX.Element {
     }
     return `${minutes} min${minutes !== 1 ? 's' : ''}`;
   }
+  
+  async function retrieveArrivalDataAndUpdateStates() : Promise<void> {
+    const stopPointsFromPostcode = await getStopPointsFromPostcode(postcode);
+    const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
+    setStopPoints(nearestTwoStopPoints);
+    const ids = nearestTwoStopPoints.map(sp => sp.id);
+    
+    const pairs = await Promise.all(ids.map(async id => [id, (await fetchArrivals(id)) ?? []] as const));
+    
+    setArrivalsByStopId([]);
+    for (const [id, arrivals] of pairs) sortArrivalsAndUpdateRecord(id, arrivals);
+    if (!hasSearched) setHasSearched(true);
+  }
+
   return (
     <>
       <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
@@ -41,18 +53,7 @@ function App() : React.JSX.Element {
             placeholder="Enter a postcode"
           />
           <button
-            onClick={async () => {
-              setHasSearched(true);
-              setArrivalsByStopId([]);
-              const stopPointsFromPostcode = await getStopPointsFromPostcode(postcode);
-              const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
-              setStopPoints(nearestTwoStopPoints);
-              const ids = nearestTwoStopPoints.map(sp => sp.id);
-              
-              const pairs = await Promise.all(ids.map(async id => [id, (await fetchArrivals(id)) ?? []] as const));
-              
-              for (const [id, arrivals] of pairs) sortArrivalsAndUpdateRecord(id, arrivals);
-            }}
+            onClick={retrieveArrivalDataAndUpdateStates}
             className="bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors"
           >
             Search
