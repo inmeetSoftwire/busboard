@@ -24,6 +24,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'eol-last': ['error', 'always'],
+      '@typescript-eslint/explicit-function-return-type': 'error'
     },
   },
 )
