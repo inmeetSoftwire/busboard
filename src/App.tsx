@@ -3,9 +3,10 @@ import { getStopPointsFromPostcode } from '../backend/postcodeService';
 import React, { useState } from 'react';
 import type { Arrival } from '../backend/Arrival';
 import type { StopPoint } from '../backend/StopPoint';
+import type { StopArrivals } from '../backend/StopArrivals';
 
 function App() : React.JSX.Element {
-  const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>({});
+  const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
@@ -62,7 +63,7 @@ function App() : React.JSX.Element {
                   <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
                     {sp.commonName} ({sp.indicator})
                   </h3>
-                  {(arrivalsByStopId[sp.id] || []).map((arrival, index) => (
+                  {(arrivalsByStopId.find(a => a.stopId == sp.id)?.arrivals || []).map((arrival, index) => (
                     <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
                       <div className="text-lg">
                         <strong>{arrival.lineName}</strong> to{" "}
