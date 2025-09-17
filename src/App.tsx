@@ -1,21 +1,21 @@
 import fetchArrivals from '../backend/fetchArrivals';
 import { getStopPointsFromPostcode } from '../backend/postcodeService';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { Arrival } from '../backend/Arrival';
 import type { StopPoint } from '../backend/StopPoint';
 
-function App() {
+function App() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<Record<string, Arrival[]>>({});
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
-  function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) {
+  function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) : void {
     const sorted = arrivals.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
     setArrivalsByStopId(prev => ({ ...(prev ?? {}), [stopId]: sorted }));
   }
 
-  function formatArrivalTime(seconds: number) {
+  function formatArrivalTime(seconds: number) : string {
     const minutes = Math.round(seconds / 60);
     if (minutes === 0) {
       return "Due";
