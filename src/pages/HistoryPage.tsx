@@ -1,6 +1,15 @@
 import horseBusImage from '../assets/1829_horse_bus.webp';
-
+import horseBusColourImage from '../assets/horse_bus_colour.jpg';
+import { useState } from 'react';
 function HistoryPage() {
+  const [isImageColoured, setIsImageColoured] = useState(false);
+
+  function toggleImageColour() {
+    setIsImageColoured(!isImageColoured);
+  }
+  function getButtonText() {
+    return isImageColoured ? "Show Grayscale" : "Show Colour";
+  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
       <div className="w-full max-w-3xl">
@@ -14,7 +23,7 @@ function HistoryPage() {
           <p className="mt-2 leading-relaxed">
             The first omnibus (horse-drawn) service in London was in 1829, run by
             George Shillibeer, between Paddington and the City of London. Soon
-            after, steam carriages began to appear (notably Walter Hancock’s in
+            after, steam carriages began to appear (notably Walter Hancock's in
             1831), and over the next decades many independent operators set up
             services. These evolved from horse-drawn to steam, then petrol and
             diesel buses.
@@ -22,8 +31,8 @@ function HistoryPage() {
           <div className="relative inline-block group">
             <img
                 src={horseBusImage}
-                alt="Example"
-                className="block w-full h-auto rounded-lg"
+                alt="1829 Horse-drawn Bus"
+                className="block w-full h-auto rounded-lg mt-4"
             />
             <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
@@ -34,6 +43,11 @@ function HistoryPage() {
                 London Horse-drawn Bus in 1829
             </div>
           </div>
+          <img src={horseBusColourImage} alt="Horse Bus Colour Illustration" className={`mt-4 w-full h-auto rounded-lg ${isImageColoured ? '' : 'grayscale'}`} />
+          <button
+            className={`block w-full mt-2 bg-cyan-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors ${isImageColoured ? 'grayscale' : ''}`}
+            onClick={toggleImageColour}>{getButtonText()}
+          </button>
           <h2 className="text-2xl font-semibold mt-4 text-cyan-700">
             Formation of Transport Authorities
           </h2>
