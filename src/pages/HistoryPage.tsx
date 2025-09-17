@@ -1,11 +1,12 @@
+import horseBusImage from '../assets/1829_horse_bus.webp';
+
 function HistoryPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
       <div className="w-full max-w-3xl">
         <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm text-center">
-          History of London Buses
+          History of Buses
         </h1>
-
         <div className="bg-white shadow-md rounded-lg p-6 text-gray-700">
           <h2 className="text-2xl font-semibold mt-2 text-cyan-700">
             Origins: Early Buses
@@ -18,7 +19,21 @@ function HistoryPage() {
             services. These evolved from horse-drawn to steam, then petrol and
             diesel buses.
           </p>
-
+          <div className="relative inline-block group">
+            <img
+                src={horseBusImage}
+                alt="Example"
+                className="block w-full h-auto rounded-lg"
+            />
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                        bg-black/70 text-white px-4 py-2 rounded 
+                        opacity-0 transition-opacity duration-300 
+                        group-hover:opacity-100 select-none"
+            >
+                London Horse-drawn Bus in 1829
+            </div>
+          </div>
           <h2 className="text-2xl font-semibold mt-4 text-cyan-700">
             Formation of Transport Authorities
           </h2>
