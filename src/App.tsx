@@ -13,7 +13,10 @@ function App() : React.JSX.Element {
 
   function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) : void {
     const sorted = arrivals.sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
-    setArrivalsByStopId(prev => ({ ...(prev ?? {}), [stopId]: sorted }));
+    setArrivalsByStopId(prev => {
+      const without = prev.filter(entry => entry.stopId !== stopId);
+      return [...without, { stopId, arrivals: sorted }];
+    })
   }
 
   function formatArrivalTime(seconds: number) : string {
@@ -56,14 +59,14 @@ function App() : React.JSX.Element {
         </div>
 
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          {Object.keys(arrivalsByStopId).length > 0 ? (
+          {arrivalsByStopId.length > 0 ? (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
               {stopPoints.map((sp, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
                   <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
                     {sp.commonName} ({sp.indicator})
                   </h3>
-                  {(arrivalsByStopId.find(a => a.stopId == sp.id)?.arrivals || []).map((arrival, index) => (
+                  {(arrivalsByStopId.find(a => a.stopId === sp.id)?.arrivals || []).map((arrival, index) => (
                     <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
                       <div className="text-lg">
                         <strong>{arrival.lineName}</strong> to{" "}
