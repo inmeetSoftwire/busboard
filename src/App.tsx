@@ -43,6 +43,7 @@ function App() : React.JSX.Element {
           <button
             onClick={async () => {
               setHasSearched(true);
+              setArrivalsByStopId([]);
               const stopPointsFromPostcode = await getStopPointsFromPostcode(postcode);
               const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
               setStopPoints(nearestTwoStopPoints);
