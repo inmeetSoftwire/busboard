@@ -1,9 +1,9 @@
 import fetchArrivals from '../backend/fetchArrivals';
 import { getStopPointsFromPostcode } from '../backend/postcodeService';
 import React, { useState } from 'react';
-import type { Arrival } from '../backend/Arrival';
-import type { StopPoint } from '../backend/StopPoint';
-import type { StopArrivals } from '../backend/StopArrivals';
+import type { Arrival } from '../backend/types/Arrival';
+import type { StopPoint } from '../backend/types/StopPoint';
+import type { StopArrivals } from '../backend/types/StopArrivals';
 
 function App() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);

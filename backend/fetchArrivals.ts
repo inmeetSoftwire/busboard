@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Arrival } from './Arrival';
+import type { Arrival } from './types/Arrival';
 
 async function fetchArrivals(stopId: string) : Promise<Arrival[] | null> {
     const TFL_API_KEY = import.meta.env.TFL_API_KEY;

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type { StopPoint } from './StopPoint';
-import type { Coordinate } from './Coordinate';
+import type { StopPoint } from './types/StopPoint';
+import type { Coordinate } from './types/Coordinate';
 
 async function getCoordinateFromPostcode(postcode: string) : Promise<Coordinate | null> {
     const API_URL = `https://api.postcodes.io/postcodes/${postcode}`;
