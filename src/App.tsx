@@ -7,11 +7,18 @@ import type { StopArrivals } from '../backend/types/StopArrivals';
 function App() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
   const [postcode, setPostcode] = useState<string>("");
-  const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
-  const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [stopPoints, setStopPoints] = useState<StopPoint[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const hasSearched = stopPoints !== null;
   const isArrivalsByStopIdEmpty = arrivalsByStopId.length === 0 ;
 
   async function retrieveArrivalDataAndUpdateStates() : Promise<void> {
+    if (postcode.trim() === "") {
+      return;
+    }
+    setIsLoading(true);
+    setStopPoints([]); // stopPoints isLoading && null initially, set to empty array to indicate user has searched at least once
     const nearestTwoStopPoints = await getNearestStopPointsFromPostcode(postcode, 2);
     if (nearestTwoStopPoints) {
       setStopPoints(nearestTwoStopPoints)
@@ -22,8 +29,7 @@ function App() : React.JSX.Element {
     } else {
       setArrivalsByStopId([]);
     }
-    
-    if (!hasSearched) setHasSearched(true);
+    setIsLoading(false);
   }
 
   return (
@@ -49,9 +55,9 @@ function App() : React.JSX.Element {
         </div>
 
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          {!isArrivalsByStopIdEmpty && (
+          {!isArrivalsByStopIdEmpty && !isLoading && (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
-              {stopPoints.map((stopPoint, stopIndex) => (
+              {stopPoints?.map((stopPoint, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
                   <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
                     {stopPoint.commonName} (Stop {stopPoint.stopLetter})
@@ -71,15 +77,18 @@ function App() : React.JSX.Element {
               ))}
             </div>
           )}
-          {isArrivalsByStopIdEmpty && hasSearched && (
+          {isArrivalsByStopIdEmpty && hasSearched && !isLoading && (
             <div className="text-center text-gray-500">
               No arrivals found for this postcode.
             </div>
           )}
-          {isArrivalsByStopIdEmpty && !hasSearched && (
+          {isArrivalsByStopIdEmpty && !hasSearched && !isLoading && (
             <div className="text-center text-gray-500">
               Enter a postcode and click "Search" to see arrivals.
             </div>
+          )}
+          {isLoading && (
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-cyan-700"></div>
           )}
         </div>
       </div>
