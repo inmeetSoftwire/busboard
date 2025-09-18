@@ -1,6 +1,6 @@
 import { getNearestStopPointsFromPostcode, getStopArrivalsFromStopPoints, sortAndSliceArrivals } from '../backend/backendService';
 import React, { useState } from 'react';
-import { formatArrivalTime } from '../backend/timeFormatter';
+import { formatArrivalTime } from '../utils/timeFormatter';
 import type { StopPoint } from '../backend/types/StopPoint';
 import type { StopArrivals } from '../backend/types/StopArrivals';
 
