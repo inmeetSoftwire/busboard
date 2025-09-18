@@ -1,7 +1,6 @@
-import fetchArrivals from '../backend/fetchArrivals';
-import { getStopPointsFromPostcode } from '../backend/postcodeService';
+import { getNearestStopPointsFromPostcode, getStopArrivalsFromStopPoints, sortAndSliceArrivals } from '../backend/backendService';
 import React, { useState } from 'react';
-import type { Arrival } from '../backend/types/Arrival';
+import { formatArrivalTime } from '../backend/timeFormatter';
 import type { StopPoint } from '../backend/types/StopPoint';
 import type { StopArrivals } from '../backend/types/StopArrivals';
 
@@ -10,31 +9,19 @@ function App() : React.JSX.Element {
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-
-  function sortArrivalsAndUpdateRecord(stopId: string, arrivals: Arrival[]) : void {
-    // Assumes that the given stopId is not already in arrivalsByStopId
-    const sorted = arrivals.slice().sort((a, b) => a.timeToStation - b.timeToStation).slice(0, 5);
-    setArrivalsByStopId(prev => [...prev, { stopId, arrivals: sorted }]);
-  }
-
-  function formatArrivalTime(seconds: number) : string {
-    const minutes = Math.round(seconds / 60);
-    if (minutes === 0) {
-      return "Due";
-    }
-    return `${minutes} min${minutes !== 1 ? 's' : ''}`;
-  }
   
   async function retrieveArrivalDataAndUpdateStates() : Promise<void> {
-    const stopPointsFromPostcode = await getStopPointsFromPostcode(postcode);
-    const nearestTwoStopPoints = stopPointsFromPostcode?.sort((a, b) => a.distance - b.distance).slice(0, 2) ?? [];
-    setStopPoints(nearestTwoStopPoints);
-    const ids = nearestTwoStopPoints.map(sp => sp.id);
+    const nearestTwoStopPoints = await getNearestStopPointsFromPostcode(postcode, 2);
+    if (nearestTwoStopPoints) {
+      setStopPoints(nearestTwoStopPoints)
+      const stopArrivals = await getStopArrivalsFromStopPoints(nearestTwoStopPoints);
+      const sortedAndSlicedArrivals = sortAndSliceArrivals(stopArrivals, 5);
+      setArrivalsByStopId(sortedAndSlicedArrivals);
+      console.log(sortedAndSlicedArrivals);
+    } else {
+      setArrivalsByStopId([]);
+    }
     
-    const pairs = await Promise.all(ids.map(async id => [id, (await fetchArrivals(id)) ?? []] as const));
-    
-    setArrivalsByStopId([]);
-    for (const [id, arrivals] of pairs) sortArrivalsAndUpdateRecord(id, arrivals);
     if (!hasSearched) setHasSearched(true);
   }
 
