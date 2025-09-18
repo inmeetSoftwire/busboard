@@ -1,6 +1,6 @@
 export type StopPoint = {
     id: string;
     commonName: string;
-    indicator: string;
+    stopLetter: string;
     distance: number;
 }

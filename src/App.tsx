@@ -53,7 +53,7 @@ function App() : React.JSX.Element {
               {stopPoints.map((stopPoint, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
                   <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
-                    {stopPoint.commonName} ({stopPoint.indicator})
+                    {stopPoint.commonName} (Stop {stopPoint.stopLetter})
                   </h3>
                   {(arrivalsByStopId.find(a => a.stopId === stopPoint.id)?.arrivals || []).map((arrival, index) => (
                     <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
