@@ -9,7 +9,8 @@ function App() : React.JSX.Element {
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[]>([]);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-  
+  const isArrivalsByStopIdEmpty = arrivalsByStopId.length === 0 ;
+
   async function retrieveArrivalDataAndUpdateStates() : Promise<void> {
     const nearestTwoStopPoints = await getNearestStopPointsFromPostcode(postcode, 2);
     if (nearestTwoStopPoints) {
@@ -48,7 +49,7 @@ function App() : React.JSX.Element {
         </div>
 
         <div className="w-full max-w-xl bg-white shadow-md rounded-lg p-4">
-          {arrivalsByStopId.length > 0 ? (
+          {!isArrivalsByStopIdEmpty && (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
               {stopPoints.map((stopPoint, stopIndex) => (
                 <div key={stopIndex} className="mb-4">
@@ -69,13 +70,17 @@ function App() : React.JSX.Element {
                 </div>
               ))}
             </div>
-          ) : (( hasSearched ) ?
-          <p className="text-gray-500 text-center">No arrivals found for this postcode.</p>
-         : (
-            <p className="text-gray-500 text-center">
-              Enter a postcode and click Search to see arrivals
-            </p>
-          ))}
+          )}
+          {isArrivalsByStopIdEmpty && hasSearched && (
+            <div className="text-center text-gray-500">
+              No arrivals found for this postcode.
+            </div>
+          )}
+          {isArrivalsByStopIdEmpty && !hasSearched && (
+            <div className="text-center text-gray-500">
+              Enter a postcode and click "Search" to see arrivals.
+            </div>
+          )}
         </div>
       </div>
     </>
