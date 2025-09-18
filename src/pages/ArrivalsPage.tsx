@@ -33,7 +33,7 @@ function ArrivalsPage() {
   }
 
   return (
-      <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
+      <div className="flex-1 bg-gray-50 flex flex-col items-center justify-start ">
         <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm">
           BusBoard
         </h1>
@@ -42,7 +42,7 @@ function ArrivalsPage() {
           <input
             value={postcode}
             onChange={(e) => setPostcode(e.target.value)}
-            className="border-2 border-cyan-600 rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            className="border-2 bg-white border-cyan-600 rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-cyan-400"
             placeholder="Enter a postcode"
           />
           <button

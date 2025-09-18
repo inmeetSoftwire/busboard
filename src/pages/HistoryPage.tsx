@@ -11,7 +11,7 @@ function HistoryPage() {
     return isImageColoured ? "Show Grayscale" : "Show Colour";
   }
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
+    <div className="h-screen flex flex-col items-center justify-start bg-gray-50 p-6">
       <div className="w-full max-w-3xl">
         <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm text-center">
           History of Buses
