@@ -1,8 +1,10 @@
 import { getNearestStopPointsFromPostcode, getStopArrivalsFromStopPoints, sortAndSliceArrivals } from '../backend/backendService';
 import React, { useState } from 'react';
-import { formatArrivalTime } from '../utils/timeFormatter';
 import type { StopPoint } from '../backend/types/StopPoint';
 import type { StopArrivals } from '../backend/types/StopArrivals';
+import StopArrivalsContainer from './components/StopArrivalsContainer';
+
+
 
 function App() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
@@ -58,22 +60,7 @@ function App() : React.JSX.Element {
           {!isArrivalsByStopIdEmpty && !isLoading && (
             <div className="whitespace-pre-wrap text-gray-700 text-sm">
               {stopPoints?.map((stopPoint, stopIndex) => (
-                <div key={stopIndex} className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2 text-center text-cyan-700">
-                    {stopPoint.commonName} (Stop {stopPoint.stopLetter})
-                  </h3>
-                  {(arrivalsByStopId.find(a => a.stopId === stopPoint.id)?.arrivals || []).map((arrival, index) => (
-                    <div className="mb-2 rounded p-2 bg-gray-100" key={index}>
-                      <div className="text-lg">
-                        <strong>{arrival.lineName}</strong> to{" "}
-                        {arrival.destinationName}
-                      </div>
-                      <div className="text-md font-semibold">
-                        {formatArrivalTime(arrival.timeToStation)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <StopArrivalsContainer stopPoint={stopPoint} stopIndex={stopIndex} arrivalsByStopId={arrivalsByStopId}></StopArrivalsContainer>
               ))}
             </div>
           )}
