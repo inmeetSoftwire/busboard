@@ -33,7 +33,7 @@ function ArrivalsPage() {
   }
 
   return (
-      <div className="flex-1 bg-gray-50 flex flex-col items-center justify-start ">
+      <main className="flex-1 flex flex-col items-center justify-start ">
         <h1 className="text-4xl font-bold text-cyan-700 m-6 drop-shadow-sm">
           BusBoard
         </h1>
@@ -75,7 +75,7 @@ function ArrivalsPage() {
             <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-cyan-700"></div>
           )}
         </div>
-      </div>
+      </main>
   );
 }
 

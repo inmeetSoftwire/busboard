@@ -3,3 +3,7 @@
 html {
     scrollbar-gutter: stable;
 }
+
+main {
+    background-color: #f9fafb;
+}
