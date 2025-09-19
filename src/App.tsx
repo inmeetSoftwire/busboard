@@ -28,7 +28,7 @@ function App() : React.JSX.Element {
       setArrivalsByStopId(sortedAndSlicedArrivals);
       console.log(sortedAndSlicedArrivals);
     } else {
-      setStopPoints([]); // stopPoints isLoading && null initially, set to empty array to indicate user has searched at least once
+      setStopPoints([]); // stopPoints is null initially, set to empty array to indicate user has searched at least once
       setArrivalsByStopId([]);
     }
     setIsLoading(false);
