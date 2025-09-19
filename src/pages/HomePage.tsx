@@ -1,10 +1,10 @@
 
 function HomePage() {
   return (
-    <div className='text-center pt-10 bg-gray-50 flex-1'>
-      <h1>Welcome to the Bus Board Application</h1>
-      <p>Use the navigation to find bus stops and arrival times.</p>
-    </div>
+    <main className='text-center pt-10 flex-1'>
+      <h1 className="text-3xl">Welcome to <strong className='text-cyan-700'>Inmeet's BusBoard </strong></h1>
+      <p>Use the navigation to find arrival times and learn more about the history of buses.</p>
+    </main>
   );
 }
 
