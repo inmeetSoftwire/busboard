@@ -5,10 +5,9 @@ import { getNearestStopPointsFromPostcode, getStopArrivalsFromStopPoints, sortAn
 import StopArrivalsContainer from "../components/StopArrivalsContainer";
 import WeatherContainer from "../components/WeatherContainer";
 import { getCoordinateFromPostcode } from "../../backend/postcodeService";
-import type { Coordinate } from "../../backend/types/Coordinate";
 import { getWeatherFromCoordinate, type WeatherData } from "../../backend/weatherService";
 
-function ArrivalsPage() {
+export default function ArrivalsPage() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
   const [postcode, setPostcode] = useState<string>("");
   const [stopPoints, setStopPoints] = useState<StopPoint[] | null>(null);
@@ -92,5 +91,3 @@ function ArrivalsPage() {
       </main>
   );
 }
-
-export default ArrivalsPage;

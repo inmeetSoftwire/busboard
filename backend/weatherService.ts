@@ -1,14 +1,17 @@
 import axios from "axios";
 import type { Coordinate } from './types/Coordinate'
-// ...existing code...
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY ?? '';
 
 export type WeatherData = {
-  weather: { description: string; icon: string }[];
+  weather: WeatherDescAndIcon[];
   main: { temp: number; feels_like: number; humidity: number };
   name?: string;
 };
+type WeatherDescAndIcon = {
+  description : string,
+  icon: string
+}
 
 export async function getWeatherFromCoordinate(coordinate: Coordinate) : Promise<WeatherData | null> {
   const { latitude, longitude } = coordinate;
@@ -25,7 +28,7 @@ export async function getWeatherFromCoordinate(coordinate: Coordinate) : Promise
     const data = response.data;
 
     const result: WeatherData = {
-      weather: (data.weather ?? []).map((w: any) => ({
+      weather: (data.weather ?? []).map((w : WeatherDescAndIcon) => ({
         description: w.description,
         icon: w.icon
       })),

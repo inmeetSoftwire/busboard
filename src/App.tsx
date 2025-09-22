@@ -3,7 +3,7 @@ import ArrivalsPage from './pages/ArrivalsPage';
 import HistoryPage from './pages/HistoryPage';
 import HomePage from './pages/HomePage';
 
-function App() {
+function App() : React.JSX.Element {
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">

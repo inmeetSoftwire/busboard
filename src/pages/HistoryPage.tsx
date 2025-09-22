@@ -1,13 +1,14 @@
 import horseBusImage from '../assets/1829_horse_bus.webp';
 import horseBusColourImage from '../assets/horse_bus_colour.jpg';
 import { useState } from 'react';
-function HistoryPage() {
+
+export default function HistoryPage() : React.JSX.Element {
   const [isImageColoured, setIsImageColoured] = useState(false);
 
-  function toggleImageColour() {
+  function toggleImageColour() : void {
     setIsImageColoured(!isImageColoured);
   }
-  function getButtonText() {
+  function getButtonText() : string {
     return isImageColoured ? "Show Grayscale" : "Show Colour";
   }
   return (
@@ -141,5 +142,3 @@ function HistoryPage() {
     </main>
   );
 }
-
-export default HistoryPage;

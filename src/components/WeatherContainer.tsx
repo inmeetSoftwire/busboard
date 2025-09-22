@@ -5,7 +5,7 @@ interface WeatherContainerProps {
   weatherData: WeatherData | null;
 }
 
-export default function WeatherContainer({ weatherData } : WeatherContainerProps) {
+export default function WeatherContainer({ weatherData } : WeatherContainerProps) : React.JSX.Element {
   if (!weatherData) {
     return <div className="text-sm text-gray-500">Weather unavailable</div>;
   }
