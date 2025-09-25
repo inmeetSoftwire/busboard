@@ -3,4 +3,6 @@ export type StopPoint = {
     commonName: string;
     stopLetter: string;
     distance: number;
+    lat: number,
+    lon: number
 }

@@ -6,6 +6,7 @@ import StopArrivalsContainer from "../components/StopArrivalsContainer";
 import WeatherContainer from "../components/WeatherContainer";
 import { getCoordinateFromPostcode } from "../../backend/postcodeService";
 import { getWeatherFromCoordinate, type WeatherData } from "../../backend/weatherService";
+import BusMapContainer from "../components/BusMapContainer";
 
 export default function ArrivalsPage() : React.JSX.Element {
   const [arrivalsByStopId, setArrivalsByStopId] = useState<StopArrivals[]>([]);
@@ -23,7 +24,7 @@ export default function ArrivalsPage() : React.JSX.Element {
     }
     setIsLoading(true);
     setWeatherData(null)
-    const coordinate = await getCoordinateFromPostcode(postcode); 
+    const coordinate = await getCoordinateFromPostcode(postcode)
     if (coordinate) {
       const weather = await getWeatherFromCoordinate(coordinate)
       if (weather) setWeatherData(weather)
@@ -87,6 +88,7 @@ export default function ArrivalsPage() : React.JSX.Element {
               <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-cyan-700"></div>
             )}
           </div>
+          {stopPoints && <BusMapContainer stopPoints={stopPoints}></BusMapContainer>}
         </div>
       </main>
   );
